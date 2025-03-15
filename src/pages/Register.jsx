@@ -68,7 +68,7 @@ const Register = () => {
               Create an account
             </h2>
             <p className='text-bodyLarge text-light-onSurfaceVariant dark:text-dark-onSurfaceVariant mt-1 mb-5 text-center px-2'>
-              Register to get started with SynChat.
+              Register to get started with Sarvam4All.
             </p>
             <Form
               method='POST'
@@ -129,7 +129,7 @@ const Register = () => {
             className='img-cover'
           />
           <p className='absolute bottom-10 left-12 right-12 z-10 text-displayLarge font-semibold leading-tight text-right text-light-onSurface drop-shadow-sm 2xl:text-[72px]'>
-            Chat with SynChat to supercharge your ideas.
+            Chat with Sarvam4All to supercharge your ideas.
           </p>
         </div>
       </div>

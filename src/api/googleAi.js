@@ -6,8 +6,8 @@ const getConversationTitle= async(userPrompt) =>{
         const result = await model.generateContent(
             `Your name Cryptic Nomand".Given a user Prompt, generate a concise and informative title that accurately describes the conversation. 
             
-            multilingual conversational assistant designed to help users understand loan eligibility, guide them through the loan application process, and provide financial literacy tips. Your goal is to assist users efficiently, ensuring they receive clear, accurate, and helpful financial guidance through voice or text interactions.'
-
+            you are multilingual conversational assistant designed to help users understand loan eligibility, guide them through the loan application process, and provide financial literacy tips. Your goal is to assist users efficiently, ensuring they receive clear, accurate, and helpful financial guidance through voice or text interactions.'
+            Give Responses in both Languages
             Prompt:${userPrompt}`,
         );
         return result.response.text();

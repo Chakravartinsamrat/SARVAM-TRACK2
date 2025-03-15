@@ -166,7 +166,7 @@ const PromptField = () => {
         const response = await fetch('https://api.sarvam.ai/speech-to-text', {
           method: 'POST',
           headers: {
-            'api-subscription-key': import.meta.env.VITE_SARVAM_API_KEY, // Replace with your API key
+            'api-subscription-key': import.meta.env.VITE_SARVAM_API_KEY,
           },
           body: formData,
         });
@@ -229,7 +229,15 @@ const PromptField = () => {
         variants={promptFieldChildrenVariant}
         onClick={handleMicrophoneClick}
       />
-
+      {/* <IconBtn
+        icon={Translate}
+        title={}
+        size='large'
+        classes='ms-auto'
+        variants={promptFieldChildrenVariant}
+        onClick={handleTranslate}
+       
+      /> */}
       <div className='state-layer'></div>
     </motion.div>
   );

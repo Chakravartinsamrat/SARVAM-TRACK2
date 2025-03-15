@@ -65,7 +65,7 @@ const Login = () => {
 
           <div className='flex flex-col gap-2 max-w-[480px] mx-auto w-full'>
             <h2 className='text-displaySmall font-semibold text-light-onBackground dark:text-dark-onBackground text-center'>
-              Welcome Back To Synchat
+              Welcome Back To Sarvam4All
             </h2>
             <p className='text-bodyLarge text-light-onSurfaceVariant dark:text-dark-onSurfaceVariant mt-1 mb-5 text-center px-2'>
               Enter Your Account Details
@@ -127,7 +127,7 @@ const Login = () => {
             className='img-cover'
           />
           <p className='absolute bottom-10 left-12 right-12 z-10 text-displayLarge font-semibold leading-tight text-right text-light-onSurface drop-shadow-sm 2xl:text-[72px]'>
-            Chat with SynChat to supercharge your ideas.
+            Chat with Sarvam4All to supercharge your ideas.
           </p>
         </div>
       </div>
