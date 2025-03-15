@@ -109,7 +109,7 @@ const ResetLink = () => {
             className='img-cover'
           />
           <p className='absolute bottom-10 left-12 right-12 z-10 text-displayLarge font-semibold leading-tight text-right text-dark-onSurface drop-shadow-sm 2xl:text-[72px]'>
-            Chat with Sarvam4All to supercharge your ideas.
+          Sarvam4All- A Multilingual ChatBot
           </p>
         </div>
       </div>
