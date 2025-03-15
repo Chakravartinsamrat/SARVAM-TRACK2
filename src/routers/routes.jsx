@@ -65,7 +65,7 @@ const router = createBrowserRouter([
         element: <ResetPassword />,
         action: resetPasswordAction,
         loader: resetPasswordLoader,
-    },
+    }
     
 ]);
 
