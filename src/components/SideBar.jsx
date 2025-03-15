@@ -100,7 +100,7 @@ const submit = useSubmit();
              truncate
            '
           >
-            &copy; 2025 Piyush.C. All rights reserved.
+            &copy; 2025 Cryptic Nomand All rights reserved.
           </div>
         </div>
       </motion.div>

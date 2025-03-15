@@ -116,7 +116,7 @@ const Login = () => {
             </p>
           </div>
           <p className='mt-auto mx-auto text-light-onSurfaceVariant dark:text-dark-onSurfaceVariant text-bodyMedium lg:mx-0'>
-            &copy; 2025 Piyush.C. All rights reserved.
+            &copy; 2025 Cryptic Nomand All rights reserved.
           </p>
         </div>
 
