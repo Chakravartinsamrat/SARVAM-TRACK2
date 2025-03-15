@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pin, Download, FileUp } from "lucide-react";
+import { Download, FileUp } from "lucide-react";
 import axios from "axios";
 
 const PdfTranslator = () => {
@@ -49,12 +49,10 @@ const PdfTranslator = () => {
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        "api-subscription-key": "1742b802-6774-4aec-9f2f-38d9eafac98c",
+                        "api-subscription-key": import.meta.env.VITE_SARVAM_API_KEY,
                     },
                 }
             );
-
-            console.log("Response:", response.data);
 
             if (response.data && response.data.translated_pdf) {
                 setResponsePDF(response.data.translated_pdf);
@@ -96,16 +94,137 @@ const PdfTranslator = () => {
         }
     };
 
+    // Custom styles for violet theme
+    const styles = {
+        container: {
+            backgroundColor: "var(--surface, #FCF7FF)",
+            color: "var(--onSurface, #1D1B22)",
+            borderRadius: "0.75rem",
+            padding: "1rem",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            maxWidth: "28rem",
+            margin: "0 auto",
+            fontFamily: "'Inter', 'Roboto', sans-serif"
+        },
+        title: {
+            fontSize: "1.25rem",
+            fontWeight: "700",
+            marginBottom: "1rem",
+            textAlign: "center",
+            color: "var(--primary, #A033FF)"
+        },
+        primaryButton: {
+            backgroundColor: "var(--primary, #A033FF)",
+            color: "var(--onPrimary, #FFFFFF)",
+            padding: "0.5rem 1rem",
+            borderRadius: "0.375rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            border: "none",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            fontWeight: "500",
+            fontSize: "0.875rem"
+        },
+        primaryButtonHover: {
+            backgroundColor: "var(--primaryContainer, #7F00DE)"
+        },
+        secondaryButton: {
+            backgroundColor: "var(--secondary, #6B4D80)",
+            color: "var(--onSecondary, #FFFFFF)",
+            padding: "0.5rem 1rem",
+            borderRadius: "0.375rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            border: "none",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            fontWeight: "500",
+            fontSize: "0.875rem"
+        },
+        secondaryButtonHover: {
+            backgroundColor: "var(--secondaryContainer, #51376B)"
+        },
+        cancelButton: {
+            backgroundColor: "var(--surfaceVariant, #4B4554)",
+            color: "var(--onSurfaceVariant, #CEC9D6)",
+            padding: "0.5rem 1rem",
+            borderRadius: "0.375rem",
+            border: "none",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            fontWeight: "500",
+            fontSize: "0.875rem"
+        },
+        fileUploadArea: {
+            border: "2px dashed var(--outline, #7C7586)",
+            borderRadius: "0.375rem",
+            padding: "1.5rem",
+            backgroundColor: "var(--surfaceContainerLow, #F5F0FC)"
+        },
+        fileLabel: {
+            display: "block",
+            textAlign: "center",
+            marginTop: "0.5rem",
+            color: "var(--onSurfaceVariant, #4B4554)",
+            fontSize: "0.875rem"
+        },
+        selectLabel: {
+            display: "block",
+            fontSize: "0.875rem",
+            fontWeight: "500",
+            color: "var(--onSurface, #1D1B22)",
+            marginBottom: "0.25rem"
+        },
+        select: {
+            display: "block",
+            width: "100%",
+            padding: "0.5rem 0.75rem",
+            borderRadius: "0.375rem",
+            border: "1px solid var(--outline, #7C7586)",
+            backgroundColor: "var(--surfaceContainerLow, #F5F0FC)",
+            color: "var(--onSurface, #1D1B22)",
+            fontSize: "0.875rem",
+            outline: "none",
+            transition: "border-color 0.2s ease"
+        },
+        selectFocus: {
+            borderColor: "var(--primary, #A033FF)",
+            boxShadow: "0 0 0 2px var(--primaryContainer, #F2D6FF)"
+        },
+        successMessage: {
+            marginTop: "1rem",
+            padding: "0.75rem",
+            backgroundColor: "var(--tertiaryContainer, #E6DEFF)",
+            color: "var(--onTertiaryContainer, #1D0065)",
+            borderRadius: "0.375rem",
+            fontSize: "0.875rem"
+        },
+        buttonContainer: {
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "1rem"
+        },
+        disabled: {
+            opacity: "0.5",
+            cursor: "not-allowed"
+        }
+    };
+
     return (
-        <div className="p-4 max-w-md mx-auto bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-4 text-center">PDF Translator</h2>
+        <div style={styles.container}>
+            <h2 style={styles.title}>PDF Translator</h2>
             
             {!upload ? (
-                <div className="space-y-4">
-                    <div className="flex justify-center space-x-4">
+                <div>
+                    <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
                         <button 
                             onClick={() => setUpload(true)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-blue-600 transition"
+                            style={styles.primaryButton}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--primaryContainer, #7F00DE)"}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--primary, #A033FF)"}
                         >
                             <FileUp size={18} />
                             <span>Upload PDF</span>
@@ -114,7 +233,9 @@ const PdfTranslator = () => {
                         {responsePDF && (
                             <button 
                                 onClick={() => downloadBase64Pdf(responsePDF, fileName)}
-                                className="bg-green-500 text-white px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-green-600 transition"
+                                style={styles.secondaryButton}
+                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--secondaryContainer, #51376B)"}
+                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--secondary, #6B4D80)"}
                             >
                                 <Download size={18} />
                                 <span>Download Translated PDF</span>
@@ -123,37 +244,39 @@ const PdfTranslator = () => {
                     </div>
                     
                     {responsePDF && (
-                        <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-md">
+                        <div style={styles.successMessage}>
                             Your PDF has been translated successfully!
                         </div>
                     )}
                 </div>
             ) : (
-                <div className="space-y-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-md p-6">
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <div style={styles.fileUploadArea}>
                         <input 
                             type="file" 
                             accept=".pdf" 
                             onChange={handleFileChange}
-                            className="w-full"
+                            style={{ width: "100%" }}
                             id="pdf-upload"
                         />
                         <label 
                             htmlFor="pdf-upload" 
-                            className="block text-center text-gray-500 mt-2"
+                            style={styles.fileLabel}
                         >
                             {fileName ? fileName : "Select a PDF file"}
                         </label>
                     </div>
                     
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label style={styles.selectLabel}>
                             Select Translation Language:
                         </label>
                         <select
                             value={selectedLanguage}
                             onChange={(e) => setSelectedLanguage(e.target.value)}
-                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            style={styles.select}
+                            onFocus={(e) => Object.assign(e.target.style, styles.selectFocus)}
+                            onBlur={(e) => e.target.style.boxShadow = "none"}
                         >
                             {languageOptions.map((lang) => (
                                 <option key={lang.code} value={lang.code}>
@@ -163,19 +286,31 @@ const PdfTranslator = () => {
                         </select>
                     </div>
                     
-                    <div className="flex justify-between">
+                    <div style={styles.buttonContainer}>
                         <button 
                             onClick={() => setUpload(false)}
-                            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+                            style={styles.cancelButton}
+                            onMouseOver={(e) => e.currentTarget.style.opacity = "0.9"}
+                            onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
                         >
                             Cancel
                         </button>
                         <button 
                             onClick={Translate}
                             disabled={!pdf || isLoading}
-                            className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition flex items-center space-x-2 ${(!pdf || isLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            style={!pdf || isLoading ? { ...styles.primaryButton, ...styles.disabled } : styles.primaryButton}
+                            onMouseOver={(e) => {
+                                if (!(!pdf || isLoading)) {
+                                    e.currentTarget.style.backgroundColor = "var(--primaryContainer, #7F00DE)";
+                                }
+                            }}
+                            onMouseOut={(e) => {
+                                if (!(!pdf || isLoading)) {
+                                    e.currentTarget.style.backgroundColor = "var(--primary, #A033FF)";
+                                }
+                            }}
                         >
-                            {isLoading ? 'Translating...' : 'Translate'}
+                            <span>{isLoading ? 'Translating...' : 'Translate'}</span>
                         </button>
                     </div>
                 </div>
