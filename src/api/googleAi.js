@@ -1,7 +1,7 @@
 import model from "../lib/googleAi";
 // Add this near the top of your code to debug
 
-const getConversationTitle = async(userPrompt) => {
+const getConversationTitle= async(userPrompt) =>{
     try{
         const result = await model.generateContent(
             `Given a user Prompt, generate a concise and informative title that accurately describes the conversation. Do not generate markdown.
@@ -17,13 +17,14 @@ const getConversationTitle = async(userPrompt) => {
     catch(err){
         console.log(`Error generating conversation title:${err.message}`);
         console.log("All env vars:", import.meta.env);
+    
     }
 };
 
 
-const getAiResponse = async (userPrompt, chats=[]) => {
+const getAiResponse = async (userPrompt,chats=[]) =>{
  const history = [];
- chats.forEach(({user_prompt, ai_response}) => {
+ chats.forEach(({user_prompt, ai_response}) =>{
     history.push(
         {
             role:'user',
@@ -36,9 +37,10 @@ const getAiResponse = async (userPrompt, chats=[]) => {
     )
  });
 
+
     try{
-        model.generateConfig = {temperature: 1.0}; // Fixed typo: generateCofig -> generateConfig
-        const chat = model.startChat({history});
+        model.generateCofig = {temperature: 1.0};
+        const chat = model.startChat({history });
         const result = await chat.sendMessage(userPrompt);
 
         return result.response.text();
@@ -48,44 +50,8 @@ const getAiResponse = async (userPrompt, chats=[]) => {
     }
 };
 
-// New function to handle PDF analysis
-const getPdfAnalysis = async (pdfData, userPrompt, chats=[]) => {
-    try {
-        // For PDFs being processed as base64 data
-        if (typeof pdfData === 'string') {
-            const result = await model.generateContent([
-                {
-                    inlineData: {
-                        data: pdfData,
-                        mimeType: "application/pdf",
-                    }
-                },
-                userPrompt || 'Summarize this document'
-            ]);
-            
-            return result.response.text();
-        } 
-        // For PDFs being processed through fileUri (for large files via File API)
-        else if (pdfData.fileUri) {
-            const result = await model.generateContent([
-                {
-                    fileData: {
-                        fileUri: pdfData.fileUri,
-                        mimeType: "application/pdf",
-                    }
-                },
-                userPrompt || 'Summarize this document'
-            ]);
-            
-            return result.response.text();
-        }
-        else {
-            throw new Error("Invalid PDF data format");
-        }
-    } catch (err) {
-        console.log(`Error analyzing PDF: ${err.message}`);
-        return `Error analyzing PDF: ${err.message}`;
-    }
-};
 
-export {getConversationTitle, getAiResponse, getPdfAnalysis}
+
+
+
+export {getConversationTitle, getAiResponse}
