@@ -74,33 +74,43 @@ const PromptField = () => {
   const handleSubmit = useCallback(() => {
     if ((!inputValue && !isPdfMode) || navigation.state === 'submitting') return;
     
-    // Create FormData for the request
-    const formData = new FormData();
-    
     if (isPdfMode && pdfFile) {
-      // For PDF mode, send the PDF file to Gemini
-      formData.append('pdf_file', pdfFile);
-      formData.append('request_type', 'pdf_analysis');
-      formData.append('user_prompt', inputValue || 'Please describe the content of this PDF document');
+      // First, create a FileReader to convert the PDF to base64
+      const reader = new FileReader();
       
-      submit(
-        {
-          user_prompt: inputValue || 'Please describe the content of this PDF document',
-          request_type: 'pdf_analysis',
-          pdf_file: pdfFile
-        },
-        {
-          method: 'POST',
-          encType: 'multipart/form-data', // Important for file uploads
-          action: `/${conversationId || ''}`,
+      reader.onload = async (e) => {
+        // Get base64 data (remove the prefix 'data:application/pdf;base64,')
+        const base64Data = e.target.result.split(',')[1];
+        
+        // For files under 20MB, use inline data
+        if (pdfFile.size < 20 * 1024 * 1024) {
+          submit(
+            {
+              user_prompt: inputValue || 'Please describe the content of this PDF document',
+              request_type: 'pdf_analysis',
+              pdf_data: base64Data
+            },
+            {
+              method: 'POST',
+              encType: 'application/json',
+              action: `/${conversationId || ''}`,
+            }
+          );
+        } else {
+          // For larger files, we would need to implement the File API approach
+          // But this would require backend changes to use GoogleAIFileManager
+          console.log("File too large, requires File API implementation");
         }
-      );
+        
+        // Reset PDF mode
+        setIsPdfMode(false);
+        setPdfFile(null);
+      };
       
-      // Reset PDF mode
-      setIsPdfMode(false);
-      setPdfFile(null);
+      // Read the PDF as data URL
+      reader.readAsDataURL(pdfFile);
     } else {
-      // Regular text mode
+      // Regular text mode - keep as is
       submit(
         {
           user_prompt: inputValue,
@@ -113,7 +123,7 @@ const PromptField = () => {
         }
       );
     }
-
+  
     inputField.current.innerHTML = '';
     handleInputChange();
   }, [handleInputChange, inputValue, navigation.state, submit, conversationId, isPdfMode, pdfFile]);
@@ -263,15 +273,15 @@ const PromptField = () => {
   const handlePdfUpload = async (event) => {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
-      setPdfFile(file);
+      // Show loading indicator
       setIsPdfMode(true);
-      
-      // Set a default query for the PDF
-      inputField.current.innerText = "Please analyze this PDF document";
+      inputField.current.innerText = "What would you like to know about this PDF?";
       handleInputChange();
       
-      // Optional notification
-      // You could add a notification here that a PDF is loaded and ready for analysis
+      // Store the PDF file for submission
+      setPdfFile(file);
+      
+      console.log(`PDF loaded: ${file.name}, ${file.size} bytes`);
     }
   };
 
@@ -344,7 +354,7 @@ const PromptField = () => {
           variants={promptFieldChildrenVariant}
           onClick={togglePdfTranslator}
         />
-        <input
+        {/* <input
           type='file'
           accept='.pdf'
           onChange={handlePdfUpload}
@@ -358,7 +368,7 @@ const PromptField = () => {
           classes='ms-auto'
           variants={promptFieldChildrenVariant}
           onClick={() => document.getElementById('pdf-upload-direct').click()}
-        />
+        /> */}
       </motion.div>
 
       {/* PDF Translator popup - rendered outside the prompt field container */}
@@ -404,38 +414,6 @@ const PromptField = () => {
           </div>
         </div>
       )}
-
-      {/* Add CSS to make the PdfTranslator match our theme */}
-      <style jsx>{`
-        .theme-aware-pdf-translator :global(.bg-blue-500) {
-          background-color: var(--primary) !important;
-        }
-        .theme-aware-pdf-translator :global(.bg-blue-600) {
-          background-color: var(--primaryContainer) !important;
-        }
-        .theme-aware-pdf-translator :global(.bg-green-500) {
-          background-color: var(--secondary) !important;
-        }
-        .theme-aware-pdf-translator :global(.bg-green-600) {
-          background-color: var(--secondaryContainer) !important;
-        }
-        .theme-aware-pdf-translator :global(.bg-white) {
-          background-color: var(--surface) !important;
-          color: var(--onSurface) !important;
-        }
-        .theme-aware-pdf-translator :global(.border-gray-300) {
-          border-color: var(--outline) !important;
-        }
-        .theme-aware-pdf-translator :global(.text-gray-500),
-        .theme-aware-pdf-translator :global(.text-gray-700) {
-          color: var(--onSurfaceVariant) !important;
-        }
-        .theme-aware-pdf-translator :global(.shadow-md) {
-          box-shadow:
-            0 4px 6px -1px var(--shadow),
-            0 2px 4px -1px var(--shadow);
-        }
-      `}</style>
     </>
   );
 };
