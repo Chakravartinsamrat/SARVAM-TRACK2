@@ -55,7 +55,7 @@ const App = () => {
   return (
     <>
       {/*Meta Title*/}
-      <PageTitle title='Synchat- Chat with SynChat to supercharge your ideas!' />
+      <PageTitle title='Sarvam4All- Chat with SynChat to supercharge your ideas!' />
 
       <div className='lg:grid lg:grid-cols-[320px,1fr]'>
         {/*SideBar*/}
@@ -93,7 +93,7 @@ const App = () => {
               className='text-bodySmall text-center
               text-light-onSurfaceVariant
               dark:text-dark-onSurfaceVariant p-3'>
-                Synchat may display inaccurate info, please verify with the
+                Sarvam4All may display inaccurate info, please verify with the
                 official sources.
                 <a
                   href='https://support.google.com/gemini?p=privacy_help'

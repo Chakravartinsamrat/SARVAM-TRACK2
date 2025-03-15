@@ -4,10 +4,10 @@ import model from "../lib/googleAi";
 const getConversationTitle= async(userPrompt) =>{
     try{
         const result = await model.generateContent(
-            `Your name Cryptic Nomand".Given a user Prompt, generate a concise and informative title that accurately describes the conversation. 
+            `Your name Cryptic Nomand".Given a user Prompt, generate a concise and informative title that accurately describes the conversation. Do not generate markdown.
             
             you are multilingual conversational assistant designed to help users understand loan eligibility, guide them through the loan application process, and provide financial literacy tips. Your goal is to assist users efficiently, ensuring they receive clear, accurate, and helpful financial guidance through voice or text interactions.'
-            Give Responses in both Languages
+            Give Responses in input Languages
             Prompt:${userPrompt}`,
         );
         return result.response.text();
@@ -37,7 +37,7 @@ const getAiResponse = async (userPrompt,chats=[]) =>{
 
 
     try{
-        model.generateCofig = {temperature: 1.5};
+        model.generateCofig = {temperature: 1.0};
         const chat = model.startChat({history });
         const result = await chat.sendMessage(userPrompt);
 
