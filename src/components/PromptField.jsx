@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useRef, useCallback, useState } from 'react';
 import { useNavigation, useSubmit, useParams } from 'react-router-dom';
+import PdfTranslator from './pdfTranslator';
 
 //components
 import { IconBtn } from './Button';
@@ -213,6 +214,7 @@ const PromptField = () => {
         }}
       />
 
+      <PdfTranslator/>
       <IconBtn
         icon='send'
         title='Submit'
@@ -238,7 +240,6 @@ const PromptField = () => {
         onClick={handleTranslate}
        
       /> */}
-      <div className='state-layer'></div>
     </motion.div>
   );
 };
