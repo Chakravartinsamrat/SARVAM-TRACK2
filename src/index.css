@@ -707,6 +707,9 @@
       my-3
       rounded-extraSmall;
     }
+    .recording-active{
+      color: red;
+    }
 }
 
 

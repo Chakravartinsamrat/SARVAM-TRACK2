@@ -1,8 +1,6 @@
-
 import { motion } from 'framer-motion';
 import { useRef, useCallback, useState } from 'react';
 import { useNavigation, useSubmit, useParams } from 'react-router-dom';
-
 
 //components
 import { IconBtn } from './Button';
@@ -16,10 +14,12 @@ const PromptField = () => {
   const submit = useSubmit();
   //INITIAL navigation fro checking state
 
+  //NOW I WILL HANDLE THE VOICE TRANSLATION REQUEST
+  const [isRecording, setIsRecording] = useState(false);
+
   const navigation = useNavigation();
 
-  const {conversationId } = useParams();
-
+  const { conversationId } = useParams();
 
   //state for input field
   const [placeholderShown, setPlaceholderShown] = useState(true);
@@ -64,29 +64,24 @@ const PromptField = () => {
 
   //handling submit gemini integration from here on
   const handleSubmit = useCallback(() => {
-    if(!inputValue || navigation.state ==='submitting')
-      return;
+    if (!inputValue || navigation.state === 'submitting') return;
     submit(
       {
-        user_prompt:inputValue,
-        request_type:'user_prompt',
-
+        user_prompt: inputValue,
+        request_type: 'user_prompt',
       },
       {
-        method:'POST',
-        encType:'application/x-www-form-urlencoded',
+        method: 'POST',
+        encType: 'application/x-www-form-urlencoded',
         action: `/${conversationId || ''}`,
-      }
+      },
     );
-
 
     inputField.current.innerHTML = '';
     handleInputChange();
   }, [handleInputChange, inputValue, navigation.state, submit, conversationId]);
 
-
-  
-    // MAIN PART STARTS
+  // MAIN PART STARTS
   //motion on prompt box and it's child
   const promptFieldVariant = {
     hidden: { scaleX: 0 },
@@ -105,6 +100,90 @@ const PromptField = () => {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   };
+
+  //FUCNTION TO hanfle microphone click
+  const handleMicrophoneClick = useCallback(() => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }, [isRecording]);
+
+  //anna start recording na?
+  const startRecording = useCallback(() => {
+    setIsRecording(true);
+
+    // Create a MediaRecorder instance
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks = [];
+
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+          audioChunks.push(event.data);
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          sendAudioToSarvam(audioBlob);
+        });
+
+        // Start recording for 5 seconds (can be adjusted)
+        mediaRecorder.start();
+        setTimeout(() => {
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            setIsRecording(false);
+          }
+        }, 5000);
+
+        // Store mediaRecorder reference to stop it manually
+        window.mediaRecorder = mediaRecorder;
+      })
+      .catch((error) => {
+        console.error('Error accessing microphone:', error);
+        setIsRecording(false);
+      });
+  }, []);
+  // Function to stop recording manually
+  const stopRecording = useCallback(() => {
+    if (window.mediaRecorder && window.mediaRecorder.state === 'recording') {
+      window.mediaRecorder.stop();
+    }
+    setIsRecording(false);
+  }, []);
+
+  const sendAudioToSarvam = useCallback(
+    async (audioBlob) => {
+      try {
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        formData.append('model', 'saarika:v2');
+        formData.append('language_code', 'unknown'); // Use "unknown" for auto-detection
+
+        const response = await fetch('https://api.sarvam.ai/speech-to-text', {
+          method: 'POST',
+          headers: {
+            'api-subscription-key': import.meta.env.VITE_SARVAM_API_KEY, // Replace with your API key
+          },
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.transcript) {
+          // Set the transcript to the input field
+          inputField.current.innerText = data.transcript;
+          handleInputChange();
+        }
+      } catch (error) {
+        console.error('Error with speech-to-text:', error);
+      }
+    },
+    [handleInputChange],
+  );
 
   return (
     <motion.div
@@ -125,8 +204,8 @@ const PromptField = () => {
         ref={inputField}
         onInput={handleInputChange}
         onPaste={handlePaste}
-        onKeyDown={(e)=>{
-          if(e.key ==='Enter' && !e.shiftKey){
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
             //submit input'
             e.preventDefault();
             handleSubmit();
@@ -141,6 +220,14 @@ const PromptField = () => {
         classes='ms-auto'
         variants={promptFieldChildrenVariant}
         onClick={handleSubmit}
+      />
+      <IconBtn
+        icon={isRecording ? 'stop' : 'microphone'}
+        title={isRecording ? 'Stop' : 'Voice Input'}
+        size='large'
+        classes={`ms-auto ${isRecording ? 'recording-active' : ''}`}
+        variants={promptFieldChildrenVariant}
+        onClick={handleMicrophoneClick}
       />
 
       <div className='state-layer'></div>
