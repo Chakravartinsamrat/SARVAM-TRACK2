@@ -3,7 +3,7 @@ import { redirect } from 'react-router-dom';
 
 //custom
 import { account, databases } from '../../lib/appwrite';
-import { getConversationTitle, getAiResponse ,getPdfAnalysis} from '../../api/googleAi';
+import { getConversationTitle, getAiResponse } from '../../api/googleAi';
 import generateID from '../../utils/generateID';
 
 
@@ -70,53 +70,7 @@ const userPromptAction = async (formData) => {
   return redirect(`/${conversation.$id}`);
 };
 
-// Add this new function to handle PDF analysis requests
-const pdfAnalysisAction = async (formData) => {
-  const userPrompt = formData.get('user_prompt');
-  const pdfData = formData.get('pdf_data');
-  
-  // User info
-  const user = await account.get();
-  
-  // Get conversation title based on user prompt or use default
-  const conversationTitle = await getConversationTitle(userPrompt) || "PDF Document Analysis";
-  
-  // Create conversation document
-  let conversation = null;
-  try {
-    conversation = await databases.createDocument(
-      import.meta.env.VITE_APPWRITE_DATABASE_ID,
-      'conversations',
-      generateID(),
-      {
-        title: conversationTitle,
-        user_id: user.$id,
-      },
-    );
-  } catch (err) {
-    console.log(`Error Creating Conversation: ${err.message}`);
-  }
-  
-  // Generate response using the PDF analysis function
-  const aiResponse = await getPdfAnalysis(pdfData, userPrompt);
-  
-  try {
-    await databases.createDocument(
-      import.meta.env.VITE_APPWRITE_DATABASE_ID,
-      'chats',
-      generateID(),
-      {
-        user_prompt: userPrompt,
-        ai_response: aiResponse,
-        conversation: conversation.$id,
-      },
-    );
-  } catch (err) {
-    console.log(`Error in getting a response: ${err.message}`);
-  }
-  
-  return redirect(`/${conversation.$id}`);
-};
+
 
 
 const appAction = async ({ request }) => {
@@ -129,9 +83,6 @@ const appAction = async ({ request }) => {
 
   if(requestType === 'delete_conversation'){
     return await conversationAction(formData);
-  }
-  if (requestType === 'pdf_analysis') {
-    return await pdfAnalysisAction(formData);
   }
 };
 
