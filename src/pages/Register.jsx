@@ -43,25 +43,7 @@ const Register = () => {
       <div className='relative w-screen h-dvh p-2 grid grid-cols-1 lg:grid-cols-[1fr,1.2fr] lg:gap-2'>
         <div className='flex flex-col p-4'>
           <Logo classes='mb-auto sm:mx-auto lg:mx-0'/>
-          {/* <Link
-            to='/'
-            className='max-w-max '
-          >
-            <img
-              src={logoLight}
-              alt='synchat logo'
-              width={133}
-              height={24}
-              className='dark:hidden'
-            />
-            <img
-              src={logoDark}
-              alt='synchat logo'
-              width={133}
-              height={24}
-              className='hidden dark:block'
-            />
-          </Link> */}
+          
 
           <div className='flex flex-col gap-2 max-w-[480px] mx-auto w-full'>
             <h2 className='text-displaySmall font-semibold text-light-onBackground dark:text-dark-onBackground text-center'>

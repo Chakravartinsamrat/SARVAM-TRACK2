@@ -15,14 +15,14 @@ const Logo = ({classes=''}) => {
         src={logoLight}
         width={133}
         height={24}
-        alt='Synchat Logo'
+        alt='Sarvam4All Logo'
         className='dark:hidden'
       />
       <img
         src={logoDark}
         width={133}
         height={24}
-        alt='Synchat Logo'
+        alt='Sarvam4All Logo'
         className='hidden dark:block'
       />
     </Link>

@@ -55,7 +55,7 @@ const App = () => {
   return (
     <>
       {/*Meta Title*/}
-      <PageTitle title='Sarvam4All- Chat with SynChat to supercharge your ideas!' />
+      <PageTitle title='Sarvam4All- Chat with Sarvam4All to supercharge your ideas!' />
 
       <div className='lg:grid lg:grid-cols-[320px,1fr]'>
         {/*SideBar*/}
