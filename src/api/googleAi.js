@@ -6,7 +6,7 @@ const getConversationTitle= async(userPrompt) =>{
         const result = await model.generateContent(
             `Given a user Prompt, generate a concise and informative title that accurately describes the conversation. Do not generate markdown.
             
-            you are multilingual conversational assistant designed to help users understand loan eligibility, guide them through the loan application process, and provide financial literacy tips. Your goal is to assist users efficiently, ensuring they receive clear, accurate, and helpful financial guidance through voice or text interactions.
+            you are multilingual conversational assistant designed to help users understand loan eligibility, guide them through the loan application process, and provide financial literacy tips. 
             Give Responses in input Languages
 
             Anything other than Loan and Finances, Respond with "I cannot help you with that".
