@@ -25,5 +25,6 @@ Further setup
 
 # Running the Whatsapp App
 > cd Whatsapp
+
 > node index.js
-> 
+
